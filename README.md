@@ -7,6 +7,7 @@ https://drive.google.com/file/d/1wl6abLDMFoktcZ5gJV0sypYQSaij_Cub/view?usp=share
 
 ### Image Acquisition <br />
 You can simply drag and drop your image or upload it using the browse button. (Upload) <br />
+
 ![2022-11-12](https://user-images.githubusercontent.com/61421659/201445878-6bb61400-f5bd-4984-89e6-85623df4c39e.png)
 
 ### Predict button <br />
