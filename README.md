@@ -1,5 +1,6 @@
 # Face-Classifier
 ### A face shape classifier using transformer <br />
+Here is the link to the colab notebook -> https://colab.research.google.com/drive/1iTg2fEgfBId9hz64ZkmUZjGFKKu33Qd7?usp=sharing <br />
 Here is the link to the model -> https://drive.google.com/file/d/1wl6abLDMFoktcZ5gJV0sypYQSaij_Cub/view?usp=share_link <br />
 
 ### Image Acquisition <br />
