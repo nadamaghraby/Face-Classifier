@@ -4,6 +4,7 @@ Here is the link to the colab notebook: <br />
 https://colab.research.google.com/drive/1iTg2fEgfBId9hz64ZkmUZjGFKKu33Qd7?usp=sharing <br />
 Here is the link to the model: <br />
 https://drive.google.com/file/d/1wl6abLDMFoktcZ5gJV0sypYQSaij_Cub/view?usp=share_link <br />
+https://drive.google.com/file/d/1N_1IjP5wYu79-BVF09FcKVmT1TqddAxL/view?usp=sharing <br />
 
 ### Image Acquisition <br />
 You can simply drag and drop your image or upload it using the browse button. (Upload) <br />
