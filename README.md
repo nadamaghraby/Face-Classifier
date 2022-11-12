@@ -12,8 +12,11 @@ You can simply drag and drop your image or upload it using the browse button. (U
 
 ### Predict button <br />
 After you upload your photo, you must click on predict button to know the face type. <br />
+
 ![2022-11-12 (1)](https://user-images.githubusercontent.com/61421659/201445991-e08108a4-c3ab-4634-b8ca-a6858dd30a85.png)
+
 ### Result <br />
 The result of the prediction appears immediately after clicking on the predict button. <br />
+
 ![2022-11-12 (2)](https://user-images.githubusercontent.com/61421659/201446177-8bf9f488-13e3-4b65-b5b8-5c996b970fc0.png)
 
