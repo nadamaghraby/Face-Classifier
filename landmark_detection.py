@@ -1,8 +1,43 @@
 import cv2
 import dlib
-import matplotlib.pyplot as plt
 
 class Landmarks():
+  """A class for facial landmarks detection
+    Args: 
+        image: expects a 2D RGB image on which the detectors will be applied
+
+    Attributes: 
+        original_image: stores the input image without modifications.
+        detector: stores the face detector model. This pretrained model is based on HOG and SVM.
+        predictor: stores the landmarks detector model. This pretrained model is based on decision trees ensemble.
+
+    Methods:
+        detect_faces: detect faces in original_image
+            Returns: 
+                rectangles: coordinates of facial boundaries
+
+        detect_landmarks: detect 68 facial landmark for each face
+            Args:
+                rectangles: coordinates of facial boundaries returned from detect_faces method
+            Returns:
+                rectangles_landmarks: coordinates of 68 facial landmark for each face
+                                      indices are as follows: jaw: [0, 16], right eyebrow: [17, 21], left eyebrow: [22, 26], nose: [27, 35], right eye: [36, 41], left eye:[42, 47], mouth: [48, 67].
+
+        apply_rectangles: draw green rectangles around each face
+            Args: 
+                input_image: the image to draw facial boundaries on
+                rectangles: coordinates of facial boundaries returned from detect_faces method 
+            Returns:
+                detected_faces_image: modified image after drawing facial boundaries 
+        
+        apply_landmarks: draw blue dots on each facial landmark
+            Args:
+                input_image: the image to draw facial landmarks on
+                rectangles_coordinates: coordinates of facial landmarks returned from detect_landmarks method
+            Returns:
+                detected_landmarks_image: modified image after drawing facial landmarks 
+                  """
+
   def __init__(self,image):
     self.original_image=image #stores the image for future use
     # load the face detector and shape predictor
@@ -25,7 +60,7 @@ class Landmarks():
   def detect_faces(self):
     gray_image = cv2.cvtColor(self.original_image, cv2.COLOR_BGR2GRAY)  #transform image into gray scale
     rectangles = self.detector(gray_image)   # detect the faces (rectangles)
-    return rectangles #rectangles coordunates
+    return rectangles #rectangles coordinates
 
   #detects landmarks and returns landmarks of faces
   def detect_landmarks(self,rectangles):
@@ -61,6 +96,10 @@ class Landmarks():
         detected_landmarks_image=self._draw_circle(detected_landmarks_image, x, y) #last three arguments are radius,color,and thickness (-1 means filled circles)
     return detected_landmarks_image #landmarks are now drawn on the image
 
+##########################################################
+# uncomment this section to test the module individually #
+##########################################################
+#import matplotlib.pyplot as plt
 #image=cv2.imread("dataset_example.jpg")
 #model=Landmarks(image)
 #rectangles=model.detect_faces()

@@ -1,3 +1,4 @@
+#global imports
 from PyQt5.QtWidgets import QMainWindow,QApplication, QLabel, QFileDialog
 from PyQt5.QtCore import Qt
 from PyQt5 import QtCore, QtGui, QtWidgets
@@ -27,9 +28,10 @@ from datasets import Dataset
 from datasets import load_dataset, Image
 from transformers import AutoFeatureExtractor
 import torchvision.transforms.functional
-from landmark_detection import Landmarks
 from PIL import Image, ImageQt
 import shutil
+#local imports
+from landmark_detection import Landmarks
 
 from torchvision.transforms import (
     CenterCrop,
