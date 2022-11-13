@@ -27,7 +27,7 @@ from datasets import Dataset
 from datasets import load_dataset, Image
 from transformers import AutoFeatureExtractor
 import torchvision.transforms.functional
-from Landmark_detection import Landmarks
+from landmark_detection import Landmarks
 from PIL import Image, ImageQt
 import shutil
 
@@ -712,7 +712,6 @@ class Ui_MainWindow(QWidget):
             event.setDropAction(Qt.CopyAction)
             self.fname = event.mimeData().urls()[0].toLocalFile()
             self.set_image(self.fname)
-            self.label_3.setText("")
             event.accept()
         else:
             event.ignore()
@@ -739,8 +738,6 @@ class Ui_MainWindow(QWidget):
         self.fname = self.fname[0]
         ###open the image
         self.set_image(self.fname)
-        self.label_3.setText("")
-
         # print(type(self.fname))
 
     def predict(self):
