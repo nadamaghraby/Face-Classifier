@@ -47,13 +47,15 @@ class Landmarks():
   #draws a rectangle without overwriting the original image
   def _draw_rectangle(self,image, coordinates1, coordinates2):
     new_image=image.copy()
-    new_image=cv2.rectangle(new_image, coordinates1, coordinates2, (0, 255, 0), 3)   #last two arguments are color of rectangle and thickness
+    thickness=int(0.007*(image.shape[0]*image.shape[1])**0.5)
+    new_image=cv2.rectangle(new_image, coordinates1, coordinates2, (0, 255, 0), thickness)   #last two arguments are color of rectangle and thickness
     return new_image
 
   #draws a circle without overwriting the original image
   def _draw_circle(self,image, x, y):
     new_image=image.copy()
-    new_image=cv2.circle(new_image, (x, y), 3, (255, 0, 0),-1)   #last three arguments are radius,color,and thickness (-1 means filled circles)
+    thickness=int(0.007*(image.shape[0]*image.shape[1])**0.5)
+    new_image=cv2.circle(new_image, (x, y), thickness, (255, 0, 0),-1)   #last three arguments are radius,color,and thickness (-1 means filled circles)
     return new_image
 
   #detects faces and returns rectangles of faces (regions of interests)

@@ -63,8 +63,9 @@ feature_extractor = AutoFeatureExtractor.from_pretrained("microsoft/swin-tiny-pa
 normalize = Normalize(mean=feature_extractor.image_mean, std=feature_extractor.image_std)
 _train_transforms = Compose(
         [
-            RandomResizedCrop(feature_extractor.size),
-            RandomHorizontalFlip(),
+            Resize(feature_extractor.size),
+            #CenterCrop(feature_extractor.size),
+            #RandomHorizontalFlip(),
             # RandomAdjustSharpness(2, 0.8),
             ToTensor(),
             normalize,
@@ -746,9 +747,9 @@ class Ui_MainWindow(QWidget):
         mode = 0o666
         # self.path = f'D:/NewFolder{self.index}'
         self.path=f'TemporaryFolder'
-        print(self.path)
+        #print(self.path)
         os.makedirs(self.path, exist_ok=True )
-        print(self.fname)
+        #print(self.fname)
         img = cv2.imread(self.fname)
         model=Landmarks(img)
         rectangles=model.detect_faces()
@@ -756,30 +757,30 @@ class Ui_MainWindow(QWidget):
 
         image_with_rectangles=model.apply_rectangles(img,rectangles) 
         self.image_with_both= model.apply_landmarks(image_with_rectangles,landmarks) #draw landmarks on image with rectangles
-        self.image_with_both=cv2.cvtColor(self.image_with_both, cv2.COLOR_BGR2RGB)
+
+        #self.image_with_both=cv2.cvtColor(self.image_with_both, cv2.COLOR_BGR2RGB)
         ###### convert photo from numpy array to pyqt image
-        image = Image.fromarray(self.image_with_both, mode='RGB')
-        self.qt_img = ImageQt.ImageQt(image)
+        #image = Image.fromarray(self.image_with_both, mode='RGB') ?????????
+        #self.qt_img = ImageQt.ImageQt(image)
         ####### convert from pyqt image into pixmap image
-        self.pixmap = QtGui.QPixmap.fromImage(self.qt_img)
-        self.label.setPixmap(QPixmap(self.pixmap))
-
+        #self.pixmap = QtGui.QPixmap.fromImage(self.qt_img)
+        #self.label.setPixmap(QPixmap(self.pixmap))
         # img_path = f'D:/NewFolder{self.index}/new.jpg'
+        
         img_path=f'TemporaryFolder/new.jpg'
-
-        cv2.imwrite(img_path, img)
+        cv2.imwrite(img_path, self.image_with_both)
+        self.set_image(img_path)
         self.index += 1
         train_ds = load_dataset("imagefolder", data_dir=self.path, split="train")
         train_ds.set_transform(train_transforms)
         train_dataloader = DataLoader(train_ds, collate_fn=collate_fn, batch_size=64)
-
+        #print(train_ds[0]['pixel_values'])
         outputs = trainer.predict(train_ds)
-
         y_pred = outputs.predictions.argmax(1)
         # labels = train_ds.features['label'].names
         self.label_3.setText(f"Face Shape is: {shapes[y_pred[0]]}")
 
-        print(y_pred[0])
+        #print(y_pred[0])
         shutil.rmtree(self.path)
 
 
