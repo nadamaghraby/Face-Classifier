@@ -715,6 +715,7 @@ class Ui_MainWindow(QWidget):
             event.setDropAction(Qt.CopyAction)
             self.fname = event.mimeData().urls()[0].toLocalFile()
             self.set_image(self.fname)
+            self.label_3.setText("") 
             event.accept()
         else:
             event.ignore()
@@ -741,6 +742,7 @@ class Ui_MainWindow(QWidget):
         self.fname = self.fname[0]
         ###open the image
         self.set_image(self.fname)
+        self.label_3.setText("") 
         # print(type(self.fname))
 
     def predict(self):
