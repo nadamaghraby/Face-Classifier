@@ -38,12 +38,13 @@ class Landmarks():
                 detected_landmarks_image: modified image after drawing facial landmarks 
                   """
 
-  def __init__(self,image):
-    self.original_image=image #stores the image for future use
+  def __init__(self):
+    # self.original_image=image #stores the image for future use
     # load the face detector and shape predictor
     self.detector = dlib.get_frontal_face_detector() #instance of face detection model
     self.predictor = dlib.shape_predictor("shape_predictor_68_face_landmarks.dat")  #instance of landmark detection model, pretrained model download link: https://www.kaggle.com/datasets/sergiovirahonda/shape-predictor-68-face-landmarksdat
   
+
   #draws a rectangle without overwriting the original image
   def _draw_rectangle(self,image, coordinates1, coordinates2):
     new_image=image.copy()
@@ -59,14 +60,14 @@ class Landmarks():
     return new_image
 
   #detects faces and returns rectangles of faces (regions of interests)
-  def detect_faces(self):
-    gray_image = cv2.cvtColor(self.original_image, cv2.COLOR_BGR2GRAY)  #transform image into gray scale
+  def detect_faces(self,image):
+    gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)  #transform image into gray scale
     rectangles = self.detector(gray_image)   # detect the faces (rectangles)
     return rectangles #rectangles coordinates
 
   #detects landmarks and returns landmarks of faces
-  def detect_landmarks(self,rectangles):
-    gray_image = cv2.cvtColor(self.original_image, cv2.COLOR_BGR2GRAY)  #transform image into gray scale
+  def detect_landmarks(self,image,rectangles):
+    gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)  #transform image into gray scale
     rectangles_landmarks=[]  #list to append landmarks of each face
     for rectangle in rectangles: #iterate on faces
       landmarks = self.predictor(gray_image, rectangle)   # apply the shape predictor to the face ROI
