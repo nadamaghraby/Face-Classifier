@@ -7,6 +7,8 @@ https://drive.google.com/file/d/1wl6abLDMFoktcZ5gJV0sypYQSaij_Cub/view?usp=share
 https://drive.google.com/file/d/1N_1IjP5wYu79-BVF09FcKVmT1TqddAxL/view?usp=sharing <br />
 Here is the link to the dataset: <br />
 https://drive.google.com/file/d/1t3GfwrDYNuIf48ypTGzGHJI9psvZah0X/view?usp=sharing <br />
+
+      
 ### Image Acquisition <br />
 You can simply drag and drop your image or upload it using the browse button. (Upload) <br />
 
@@ -21,3 +23,5 @@ After you upload your photo, you must click on predict button to know the face t
 The results of both the prediction and landmarks detection appear immediately after clicking on the predict button. <br />
 
 ![2022-11-12 (3)](https://user-images.githubusercontent.com/61421659/201491153-29e07c16-52b1-4283-b98c-9295d8042020.png)
+
+![WhatsApp Video 2022-11-18 at 2 (1)](https://user-images.githubusercontent.com/61421659/202591032-7ac68c31-a13b-4286-a21a-078b88b0c02e.gif)
