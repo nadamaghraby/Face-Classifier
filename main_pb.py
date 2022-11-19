@@ -667,6 +667,7 @@ class Ui_MainWindow(QWidget):
         self.image_with_both= model.apply_landmarks(image_with_rectangles,landmarks) #draw landmarks on image with rectangles
 
     def predict(self):
+        self.progressBar.setVisible(True)   
         #mode = 0o666
         #read image 
         img=cv2.cvtColor(cv2.imread(self.fname), cv2.COLOR_BGR2RGB)
@@ -675,6 +676,12 @@ class Ui_MainWindow(QWidget):
         landmarks=landmarks_model.detect_landmarks(img,rectangles)
         image_with_rectangles=landmarks_model.apply_rectangles(img,rectangles) 
         self.image_with_both= landmarks_model.apply_landmarks(image_with_rectangles,landmarks) #draw landmarks on image with rectangles
+	#progress bar loop
+        for i in range(101):
+            # slowing down the loop
+            time.sleep(0.012)
+            # setting value to progress bar
+            self.progressBar.setValue(i)
         #transform image to dataset
         train_ds=Dataset.from_dict({"image":[Image.fromarray(self.image_with_both)],"label":[0]})
         train_ds.set_transform(train_transforms)
@@ -689,6 +696,7 @@ class Ui_MainWindow(QWidget):
         #predict faceshape
         outputs = trainer.predict(train_ds)
         y_pred = outputs.predictions.argmax(1)
+        self.progressBar.setVisible(False)
         self.label_3.setText(f"Face Shape is: {shapes[y_pred[0]]}")
 
 
