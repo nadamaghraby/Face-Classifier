@@ -32,7 +32,7 @@ import torchvision.transforms.functional
 from PIL import Image, ImageQt
 import shutil
 #local imports
-from Landmark_detection import Landmarks
+from landmark_detection import Landmarks
 
 from torchvision.transforms import (
     CenterCrop,
@@ -54,50 +54,21 @@ from torch.utils.data import DataLoader
 import torch
 import qtawesome as qta
 
+
 shapes =['Heart', 'Oblong', 'Oval', 'Round', 'Square']
-
 model = torch.load('entire_model_final.pt', map_location=torch.device('cpu'))
-
-
 feature_extractor = AutoFeatureExtractor.from_pretrained("microsoft/swin-tiny-patch4-window7-224")
-
 normalize = Normalize(mean=feature_extractor.image_mean, std=feature_extractor.image_std)
 _train_transforms = Compose(
         [
             Resize(feature_extractor.size),
-            #CenterCrop(feature_extractor.size),
-            #RandomHorizontalFlip(),
-            # RandomAdjustSharpness(2, 0.8),
             ToTensor(),
             normalize,
         ]
     )
-
-_val_transforms = Compose(
-        [
-            Resize(feature_extractor.size),
-            CenterCrop(feature_extractor.size),
-            # RandomAdjustSharpness(2, p=0.8),
-
-            ToTensor(),
-            normalize,
-        ]
-    )
-
 def train_transforms(examples):
     examples['pixel_values'] = [_train_transforms(image.convert("RGB")) for image in examples['image']]
     return examples
-
-def val_transforms(examples):
-    examples['pixel_values'] = [_val_transforms(image.convert("RGB")) for image in examples['image']]
-    return examples
-
-metric_name = "accuracy"
-metric = load_metric(metric_name)
-def compute_metrics(eval_pred):
-    predictions, labels = eval_pred
-    predictions = np.argmax(predictions, axis=1)
-    return metric.compute(predictions=predictions, references=labels)
 
 def collate_fn(examples):
     pixel_values = torch.stack([example["pixel_values"] for example in examples])
@@ -107,29 +78,24 @@ def collate_fn(examples):
 
 args = TrainingArguments(
     f"/",
-    save_strategy="epoch",
-    evaluation_strategy="epoch",
-    learning_rate=2e-5,
-    per_device_train_batch_size=64,
-    per_device_eval_batch_size=64,
-    num_train_epochs=2,
-    weight_decay=0.01,
-    load_best_model_at_end=False,
-    save_total_limit=1,
-    metric_for_best_model=metric_name,
-    logging_dir='logs',
     remove_unused_columns=False,
 )
 
 trainer = Trainer(
     model,
     args,
-#     train_dataset=train_ds,
-#     eval_dataset=val_ds,
     data_collator=collate_fn,
-    compute_metrics=compute_metrics,
-    tokenizer=feature_extractor,
 )
+
+landmarks_model=Landmarks()
+
+#trainer initialization
+img_init=np.zeros((1, 1, 3),dtype=np.uint8)
+trainer_init=Dataset.from_dict({"image":[Image.fromarray(img_init)],"label":[0]})
+trainer_init.set_transform(train_transforms)
+trainer.predict(trainer_init)
+
+
 
 class ImageLabel(QLabel):
     def __init__(self):
@@ -701,50 +667,30 @@ class Ui_MainWindow(QWidget):
         self.image_with_both= model.apply_landmarks(image_with_rectangles,landmarks) #draw landmarks on image with rectangles
 
     def predict(self):
-        self.progressBar.setVisible(True)
-        mode = 0o666
-        # self.path = f'D:/NewFolder{self.index}'
-        self.path=f'TemporaryFolder'
-        #print(self.path)
-        os.makedirs(self.path, exist_ok=True )
-        #print(self.fname)
-        img = cv2.imread(self.fname)
-        model=Landmarks(img)
-        rectangles=model.detect_faces()
-        landmarks=model.detect_landmarks(rectangles)
-
-        image_with_rectangles=model.apply_rectangles(img,rectangles) 
-        self.image_with_both= model.apply_landmarks(image_with_rectangles,landmarks) #draw landmarks on image with rectangles
-
-        #self.image_with_both=cv2.cvtColor(self.image_with_both, cv2.COLOR_BGR2RGB)
-        ###### convert photo from numpy array to pyqt image
-        #image = Image.fromarray(self.image_with_both, mode='RGB') ?????????
-        #self.qt_img = ImageQt.ImageQt(image)
-        ####### convert from pyqt image into pixmap image
-        #self.pixmap = QtGui.QPixmap.fromImage(self.qt_img)
-        #self.label.setPixmap(QPixmap(self.pixmap))
-        # img_path = f'D:/NewFolder{self.index}/new.jpg'
-        for i in range(101):
-            # slowing down the loop
-            time.sleep(0.012)
-            # setting value to progress bar
-            self.progressBar.setValue(i)
-        img_path=f'TemporaryFolder/new.jpg'
-        cv2.imwrite(img_path, self.image_with_both)
-        self.set_image(img_path)
-        self.index += 1
-        train_ds = load_dataset("imagefolder", data_dir=self.path, split="train")
+        #mode = 0o666
+        #read image 
+        img=cv2.cvtColor(cv2.imread(self.fname), cv2.COLOR_BGR2RGB)
+        #predict landmarks
+        rectangles=landmarks_model.detect_faces(img)
+        landmarks=landmarks_model.detect_landmarks(img,rectangles)
+        image_with_rectangles=landmarks_model.apply_rectangles(img,rectangles) 
+        self.image_with_both= landmarks_model.apply_landmarks(image_with_rectangles,landmarks) #draw landmarks on image with rectangles
+        #transform image to dataset
+        train_ds=Dataset.from_dict({"image":[Image.fromarray(self.image_with_both)],"label":[0]})
         train_ds.set_transform(train_transforms)
-        train_dataloader = DataLoader(train_ds, collate_fn=collate_fn, batch_size=64)
-        #print(train_ds[0]['pixel_values'])
+        ###### convert photo from numpy array to pyqt image
+        image = Image.fromarray(self.image_with_both, mode='RGB')
+        self.qt_img = ImageQt.ImageQt(image)
+        ####### convert from pyqt image into pixmap image
+        self.pixmap = QtGui.QPixmap.fromImage(self.qt_img)
+        self.pixmap = self.pixmap.scaled(QtCore.QSize(self.label.width(), self.label.height()), Qt.KeepAspectRatio, Qt.SmoothTransformation)
+        self.label.setStyleSheet("border:none;")
+        self.label.setPixmap(QPixmap(self.pixmap))
+        #predict faceshape
         outputs = trainer.predict(train_ds)
         y_pred = outputs.predictions.argmax(1)
-        # labels = train_ds.features['label'].names
-        # self.progressBar.setValue(100)
         self.label_3.setText(f"Face Shape is: {shapes[y_pred[0]]}")
 
-        #print(y_pred[0])
-        shutil.rmtree(self.path)
 
 
 app = QApplication(sys.argv)
