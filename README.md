@@ -26,4 +26,4 @@ The results of both the prediction and landmarks detection appear immediately af
 
 ### Application Demo <br />
 
-![WhatsApp Video 2022-11-18 at 2 (1)](https://user-images.githubusercontent.com/61421659/202591032-7ac68c31-a13b-4286-a21a-078b88b0c02e.gif)
+![video1150417413](https://user-images.githubusercontent.com/61421659/202854608-06c7148c-8271-45f4-bcb2-302375d04b96.gif)
