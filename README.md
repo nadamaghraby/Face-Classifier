@@ -15,14 +15,15 @@ https://drive.google.com/file/d/1t3GfwrDYNuIf48ypTGzGHJI9psvZah0X/view?usp=shari
 ### Image Acquisition <br />
 You can simply drag and drop your image or upload it using the browse button. (Upload) <br />
 
-![2022-11-12](https://user-images.githubusercontent.com/61421659/201445878-6bb61400-f5bd-4984-89e6-85623df4c39e.png)
+![WhatsApp Image 2022-11-19 at 4 17 49 PM](https://user-images.githubusercontent.com/61421659/202855321-235321ad-bcb0-401a-92e7-bb529d2593bf.jpeg)
+
 
 ### Predict button <br />
 After you upload your photo, you must click on predict button to know the face type. <br />
 
-![2022-11-12 (1)](https://user-images.githubusercontent.com/61421659/201445991-e08108a4-c3ab-4634-b8ca-a6858dd30a85.png)
+![WhatsApp Image 2022-11-19 at 4 18 22 PM](https://user-images.githubusercontent.com/61421659/202855351-eac3d41a-b4a7-49a5-bde2-32959eaa4046.jpeg)
 
 ### Result <br />
 The results of both the prediction and landmarks detection appear immediately after clicking on the predict button. <br />
 
-![2022-11-12 (3)](https://user-images.githubusercontent.com/61421659/201491153-29e07c16-52b1-4283-b98c-9295d8042020.png)
+![WhatsApp Image 2022-11-19 at 4 18 50 PM](https://user-images.githubusercontent.com/61421659/202855368-9b668a7e-6e42-45b9-81a1-f93e275ed5f0.jpeg)
