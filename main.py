@@ -650,15 +650,16 @@ class Ui_MainWindow(QWidget):
 
     def predict(self):
         #mode = 0o666
-        #read image and transform to dataset
+        #read image 
         img=cv2.cvtColor(cv2.imread(self.fname), cv2.COLOR_BGR2RGB)
-        train_ds=Dataset.from_dict({"image":[Image.fromarray(img)],"label":[0]})
-        train_ds.set_transform(train_transforms)
         #predict landmarks
         rectangles=landmarks_model.detect_faces(img)
         landmarks=landmarks_model.detect_landmarks(img,rectangles)
         image_with_rectangles=landmarks_model.apply_rectangles(img,rectangles) 
         self.image_with_both= landmarks_model.apply_landmarks(image_with_rectangles,landmarks) #draw landmarks on image with rectangles
+        #transform image to dataset
+        train_ds=Dataset.from_dict({"image":[Image.fromarray(self.image_with_both)],"label":[0]})
+        train_ds.set_transform(train_transforms)
         ###### convert photo from numpy array to pyqt image
         image = Image.fromarray(self.image_with_both, mode='RGB')
         self.qt_img = ImageQt.ImageQt(image)

@@ -56,7 +56,7 @@ class Landmarks():
   def _draw_circle(self,image, x, y):
     new_image=image.copy()
     thickness=int(0.007*(image.shape[0]*image.shape[1])**0.5)
-    new_image=cv2.circle(new_image, (x, y), thickness, (255, 0, 0),-1)   #last three arguments are radius,color,and thickness (-1 means filled circles)
+    new_image=cv2.circle(new_image, (x, y), thickness, (0, 0, 255),-1)   #last three arguments are radius,color,and thickness (-1 means filled circles)
     return new_image
 
   #detects faces and returns rectangles of faces (regions of interests)
