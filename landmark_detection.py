@@ -1,15 +1,14 @@
 import cv2
 import dlib
-
+import numpy as np
 class Landmarks():
   """A class for facial landmarks detection
     Args: 
-        image: expects a 2D RGB image on which the detectors will be applied
+        model_path: expects a path to dlib facial landmarks pretrained predictor
 
     Attributes: 
-        original_image: stores the input image without modifications.
-        detector: stores the face detector model. This pretrained model is based on HOG and SVM.
-        predictor: stores the landmarks detector model. This pretrained model is based on decision trees ensemble.
+        detector: initializes and stores the face detector model. This pretrained model is based on HOG and SVM.
+        predictor: initializes and stores the landmarks detector model. This pretrained model is based on decision trees ensemble.
 
     Methods:
         detect_faces: detect faces in original_image
@@ -36,13 +35,16 @@ class Landmarks():
                 rectangles_coordinates: coordinates of facial landmarks returned from detect_landmarks method
             Returns:
                 detected_landmarks_image: modified image after drawing facial landmarks 
+        image_mask_concat: creates mask and concatenate it with image
+            Args:
+                image: the image to concatenate facial landmarks mask with 
+            Returns:
+                4 channels array of rgb image concatenated with landmarks mask                  
                   """
 
-  def __init__(self):
-    # self.original_image=image #stores the image for future use
-    # load the face detector and shape predictor
+  def __init__(self,model_path):
     self.detector = dlib.get_frontal_face_detector() #instance of face detection model
-    self.predictor = dlib.shape_predictor("shape_predictor_68_face_landmarks.dat")  #instance of landmark detection model, pretrained model download link: https://www.kaggle.com/datasets/sergiovirahonda/shape-predictor-68-face-landmarksdat
+    self.predictor = dlib.shape_predictor(model_path)  #instance of landmark detection model, pretrained model download link: https://www.kaggle.com/datasets/sergiovirahonda/shape-predictor-68-face-landmarksdat
   
 
   #draws a rectangle without overwriting the original image
@@ -77,7 +79,12 @@ class Landmarks():
         y = landmarks.part(n).y
         landmarks_coordinates.append((x,y))
       rectangles_landmarks.append(landmarks_coordinates)
-    return rectangles_landmarks #returns list of lists (each list contains landmarks coordinates of 1 face)
+    
+    modified_landmarks=[[]]
+    for idx,landmark in enumerate(rectangles_landmarks[0]):
+      if ((idx<=16) or (idx>=27 and idx<=30)):
+        modified_landmarks[0].append(landmark)
+    return modified_landmarks #returns list of lists (each list contains landmarks coordinates of 1 face)
 
   #draw rectangles on input image
   def apply_rectangles(self,input_image,rectangles):
@@ -98,6 +105,27 @@ class Landmarks():
       for x,y in rectangle_coordinates:
         detected_landmarks_image=self._draw_circle(detected_landmarks_image, x, y) #last three arguments are radius,color,and thickness (-1 means filled circles)
     return detected_landmarks_image #landmarks are now drawn on the image
+
+  #Create a landmarks mask with equivalent image dimensions
+  def _create_mask(self,image,thickness=1):
+    landmarks=self.detect_landmarks(image,self.detect_faces(image))
+    modified_landmarks=[[]]
+    if len(landmarks) >0:
+      for idx,landmark in enumerate(landmarks[0]):
+        if ((idx<=16) or (idx>=27 and idx<=30)):
+          modified_landmarks[0].append(landmark)
+    modified_landmarks_mask=np.zeros((image.shape[0],image.shape[1]))
+    for modified_landmark in modified_landmarks:
+      for x,y in modified_landmark:
+        modified_landmarks_mask=self._draw_circle(modified_landmarks_mask, x, y,thickness)
+    return modified_landmarks_mask
+
+  #concatenate landmarks with original image
+  def image_mask_concat(self, image, thickness=1):
+    mask=self._create_mask(image,thickness)
+    return np.dstack((image,mask)) 
+
+
 
 ##########################################################
 # uncomment this section to test the module individually #

@@ -56,7 +56,7 @@ import qtawesome as qta
 
 
 shapes =['Heart', 'Oblong', 'Oval', 'Round', 'Square']
-model = torch.load('entire_model_final.pt', map_location=torch.device('cpu'))
+model = torch.load('transformers.pt', map_location=torch.device('cpu'))
 feature_extractor = AutoFeatureExtractor.from_pretrained("microsoft/swin-tiny-patch4-window7-224")
 normalize = Normalize(mean=feature_extractor.image_mean, std=feature_extractor.image_std)
 _train_transforms = Compose(
@@ -87,7 +87,7 @@ trainer = Trainer(
     data_collator=collate_fn,
 )
 
-landmarks_model=Landmarks()
+landmarks_model=Landmarks("shape_predictor_68_face_landmarks.dat")
 
 #trainer initialization
 img_init=np.zeros((1, 1, 3),dtype=np.uint8)
